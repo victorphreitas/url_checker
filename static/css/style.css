@@ -1,0 +1,131 @@
+/* Loading state */
+.loading-message {
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 0.5rem;
+  text-align: center;
+  color: #6c757d;
+}
+
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(0,0,0,0.1);
+  border-radius: 50%;
+  border-top-color: #007bff;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Result cards */
+.result-summary {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+}
+
+.result-summary.has-warnings {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+}
+
+.result-summary.is-safe {
+  background-color: #d4edda;
+  border-left: 4px solid #28a745;
+}
+
+.summary-title {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+}
+
+.summary-detail {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+/* Result details */
+.result-details {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.detail-item {
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.detail-item.warning {
+  background-color: #fff3cd;
+}
+
+.detail-item.success {
+  background-color: #d4edda;
+}
+
+.detail-item.info {
+  background-color: #e7f5ff;
+}
+
+.detail-icon {
+  margin-right: 0.75rem;
+  font-size: 1.25rem;
+}
+
+/* Error states */
+.error-card {
+  display: flex;
+  padding: 1rem;
+  background-color: #f8d7da;
+  border-left: 4px solid #dc3545;
+  border-radius: 0.25rem;
+}
+
+.error-icon {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  color: #dc3545;
+}
+
+.error-title {
+  margin: 0 0 0.25rem 0;
+  color: #721c24;
+}
+
+.error-detail {
+  margin: 0;
+  color: #721c24;
+  font-size: 0.9rem;
+}
+
+/* Redirect chain */
+.redirect-section {
+  margin-top: 1.5rem;
+}
+
+.redirect-title {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.redirect-chain {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  font-size: 0.85rem;
+  color: #495057;
+}
+
+.redirect-url {
+  margin-bottom: 0.25rem;
+  word-break: break-all;
+}
