@@ -12,7 +12,21 @@ templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")  
 
 
+def normalize_url(url: str) -> str:
+    """Ensure URL has http/https prefix"""
+    url = url.strip()
+    if not url.startswith(('http://', 'https://')):
+        url = 'http://' + url
+    return url
+
+
 def is_suspicious(url: str) -> dict:
+    # Normalize URL first
+    try:
+        normalized_url = normalize_url(url)
+    except Exception:
+        return {"valid": False, "error": "Invalid URL format"}
+    
     result = {
         "valid": validators.url(url),
         "suspicious_patterns": False,
@@ -23,9 +37,9 @@ def is_suspicious(url: str) -> dict:
 
     if not result["valid"]:
         return result  
-
-    # Heurísticas
-    if re.search(r"\d{1,3}(?:\.\d{1,3}){3}", url) or url.count(".") > 3:
+    
+    # Rest of your existing checks (using normalized_url instead of url)
+    if re.search(r"\d{1,3}(?:\.\d{1,3}){3}", normalized_url) or normalized_url.count(".") > 3:
         result["suspicious_patterns"] = True
 
     # Whois
@@ -45,7 +59,7 @@ def is_suspicious(url: str) -> dict:
     # Redirecionamentos
     try:
         with httpx.Client(follow_redirects=True, timeout=10) as client:
-            r = client.get(url)
+            r = client.get(normalized_url)
             result["redirect_chain"] = [str(resp.url) for resp in r.history] + [str(r.url)]
     except Exception:
         result["redirect_error"] = True
@@ -57,11 +71,14 @@ def is_suspicious(url: str) -> dict:
 async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-
 @app.post("/check_url")
 async def check_url(url: str = Form(...)):
-    result = is_suspicious(url)
-    return JSONResponse(content=result)
+    try:
+        normalized_url = normalize_url(url)
+        result = is_suspicious(normalized_url)
+        return JSONResponse(content=result)
+    except Exception as e:
+        return JSONResponse(content={"valid": False, "error": str(e)})
 
 
 # deploying

@@ -1,3 +1,20 @@
+function normalizeUrl(url) {
+  url = url.trim();
+  // Remove any leading/trailing spaces and slashes
+  url = url.replace(/^\/+|\/+$/g, '');
+  
+  // Add http:// if no protocol exists
+  if (!/^https?:\/\//i.test(url)) {
+    // Check if it starts with www.
+    if (/^www\./i.test(url)) {
+      url = 'http://' + url;
+    } else {
+      url = 'http://www.' + url;
+    }
+  }
+  return url;
+}
+
 document.getElementById("urlForm").addEventListener("submit", async function (e) {
   e.preventDefault();
   
@@ -6,6 +23,23 @@ document.getElementById("urlForm").addEventListener("submit", async function (e)
   const submitBtn = this.querySelector('button[type="submit"]');
   const resultDiv = document.getElementById("result");
   
+  // Normalize the URL before processing
+  let inputUrl = urlInput.value;
+  try {
+    inputUrl = normalizeUrl(inputUrl);
+  } catch (error) {
+    resultDiv.innerHTML = `
+      <div class="error-card">
+        <span class="error-icon">❌</span>
+        <div>
+          <h3 class="error-title">URL inválida</h3>
+          <p class="error-detail">Formato de URL não reconhecido</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
   // Show loading state
   submitBtn.disabled = true;
   submitBtn.innerHTML = 'Analisando... <span class="spinner"></span>';
@@ -13,7 +47,7 @@ document.getElementById("urlForm").addEventListener("submit", async function (e)
   
   try {
     const formData = new FormData();
-    formData.append("url", urlInput.value);
+    formData.append("url", inputUrl);
 
     const res = await fetch("/check_url", { 
       method: "POST", 
